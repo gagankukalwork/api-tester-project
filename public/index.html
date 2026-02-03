@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API Tester</title>
+  <style>
+    #methods { display: none; margin-top: 10px; }
+    #form { display: none; margin-top: 10px; }
+    button { margin: 5px; }
+    #output { background: #f4f4f4; padding: 10px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>API Tester</h2>
+  <button onclick="showMethods()">Choose Method</button>
+  <div id="methods">
+    <button onclick="selectMethod('GET')">GET</button>
+    <button onclick="selectMethod('POST')">POST</button>
+    <button onclick="selectMethod('PUT')">PUT</button>
+    <button onclick="selectMethod('DELETE')">DELETE</button>
+  </div>
+
+  <div id="form">
+    <input id="url" placeholder="Enter URL" style="width:300px;" />
+    <br><br>
+    <textarea id="body" placeholder="Request body (optional)" style="width:300px;height:100px;"></textarea>
+    <br>
+    <button onclick="sendRequest()">Send</button>
+  </div>
+
+  <h3>Response:</h3>
+  <pre id="output"></pre>
+
+  <h3>History:</h3>
+  <button onclick="loadHistory()">Load History</button>
+  <pre id="history"></pre>
+
+  <script>
+    let selectedMethod = "";
+
+    function showMethods() {
+      document.getElementById("methods").style.display = "block";
+    }
+
+    function selectMethod(method) {
+      selectedMethod = method;
+      document.getElementById("form").style.display = "block";
+    }
+
+    async function sendRequest() {
+      const url = document.getElementById("url").value;
+      const body = document.getElementById("body").value;
+
+      const res = await fetch("/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ method: selectedMethod, url, body })
+      });
+
+      const data = await res.json();
+      document.getElementById("output").textContent = JSON.stringify(data, null, 2);
+    }
+
+    async function loadHistory() {
+      const res = await fetch("/history");
+      const data = await res.json();
+      document.getElementById("history").textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
