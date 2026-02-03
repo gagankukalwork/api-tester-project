@@ -10,7 +10,7 @@ export default {
   port: 5432,
   driver: PostgreSqlDriver,
 
-  // 👇 VERY IMPORTANT for beginners
+
   debug: true,
   allowGlobalContext: true,
 };
