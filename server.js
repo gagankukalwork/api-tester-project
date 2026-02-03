@@ -10,16 +10,16 @@ async function startServer() {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.static("public"));
 
-  // ✅ Connect to database
+
   const orm = await MikroORM.init(config);
   const em = orm.em.fork();
 
-  // 🔹 Test route (check server + DB)
+ 
   app.get("/test", async (req, res) => {
     res.json({ message: "Server + DB working ✅" });
   });
 
-  // 🔹 Main API forward + save to DB
+ 
   app.post("/request", async (req, res) => {
     try {
       const { method, url, body } = req.body;
@@ -35,7 +35,7 @@ async function startServer() {
         data: body,
       });
 
-      // ✅ EntitySchema → use entity name as STRING
+     
       const history = em.create("RequestHistory", {
         method,
         url,
@@ -55,7 +55,7 @@ async function startServer() {
     }
   });
 
-  // 🔹 Fetch request history
+ 
   app.get("/history", async (req, res) => {
     const history = await em.find("RequestHistory", {});
     res.json(history);
